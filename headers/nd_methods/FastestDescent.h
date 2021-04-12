@@ -1,9 +1,9 @@
 #pragma once
 
 #include "MinSearcher.h"
-
 #include "nd_methods/Gradient.h"
 #include "sd_methods/MinSearcher.h"
+
 #include "util/Function.h"
 #include "util/Vector.h"
 
@@ -31,4 +31,4 @@ private:
     min1d::MinSearcher * m_sd_searcher;
 };
 
-}
+} // namespace min_nd

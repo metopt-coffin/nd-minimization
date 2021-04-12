@@ -1,6 +1,8 @@
 #include "nd_methods/FastestDescent.h"
+
 #include "nd_methods/MinSearcher.h"
 #include "sd_methods/MinSearcher.h"
+
 #include "util/Function.h"
 #include "util/Vector.h"
 #include "util/VersionedData.h"
@@ -58,4 +60,4 @@ TracedSearchRes FastestDescent::find_min_traced_impl()
     return {curr, sd_min.min, m_replay_data};
 }
 
-}
+} // namespace min_nd

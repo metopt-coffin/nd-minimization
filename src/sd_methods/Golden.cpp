@@ -1,4 +1,5 @@
 #include "sd_methods/Golden.h"
+
 #include "sd_methods/MinSearcher.h"
 
 #include "util/ReplayData.h"
