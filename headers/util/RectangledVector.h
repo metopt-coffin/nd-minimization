@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cassert>
 #include <vector>
 
@@ -36,8 +37,8 @@ struct RectangledVector
         template <class Dummy = void, std::enable_if_t<!is_const, Dummy>>
         iter end() noexcept { return m_end; }
 
-        const iter begin() const { return m_begin; }
-        const iter end() const { return m_end; }
+        iter begin() const { return m_begin; }
+        iter end() const { return m_end; }
 
         template <class Dummy = void, std::enable_if_t<!is_const, Dummy>>
         T & operator [] (std::size_t idx) noexcept { return *(m_begin + idx); }
@@ -60,6 +61,24 @@ public:
         , m_height(height)
     {
         assert(m_data.size() == m_width * m_height && "RectangledVector: vector size mismatch");
+    }
+    RectangledVector(std::vector<std::vector<T>> data)
+        : m_height(data.size())
+    {
+        if (m_height > 0) {
+            m_width = data[0].size();
+            assert(std::all_of(data.begin(), data.end(), [width{m_width}](const auto & row) { return width == row.size(); }) &&
+                "RectangledVector is created from non-rectangled one");
+        } else {
+            m_width = 0;
+        }
+        m_data.resize(m_height * m_width);
+        auto it = m_data.begin();
+        for (uint i = 0; i < m_height; ++i) {
+            for (uint j = 0; j < m_width; ++j) {
+                *it++ = data[i][j];
+            }
+        }
     }
 
     RectangledVector(std::size_t width, std::size_t height)

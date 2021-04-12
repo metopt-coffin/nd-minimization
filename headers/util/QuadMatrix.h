@@ -4,6 +4,7 @@
 #include "Vector.h"
 
 #include <algorithm>
+#include <cassert>
 #include <vector>
 
 namespace util {
@@ -15,6 +16,10 @@ struct QuadMatrix
     QuadMatrix(std::size_t dims)
         : m_data(dims, dims)
     {}
+    QuadMatrix(std::vector<std::vector<double>> data)
+        : m_data(std::move(data))
+    {
+    }
 
     DataHolder::RowView operator[](std::size_t idx) noexcept { return m_data[idx]; }
 
@@ -29,6 +34,8 @@ struct QuadMatrix
         });
         return Vector(std::move(res));
     }
+
+    std::size_t dims() const noexcept { return m_data.cols(); }
 
 private:
     DataHolder m_data;
