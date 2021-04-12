@@ -27,14 +27,14 @@ protected:
      * Find unimodal function's minimum
      * using golden ratio method.
      */
-    double find_min_impl() noexcept override;
+    SearchRes find_min_impl() noexcept override;
 
     /*
      * Find unimodal function's minimum
      * using golden ratio method.
      * Outputs tracing information.
      */
-    double find_min_tracked_impl() noexcept override;
+    TracedSearchRes find_min_tracked_impl() noexcept override;
 
     double m_eps; // required accuracy
 };

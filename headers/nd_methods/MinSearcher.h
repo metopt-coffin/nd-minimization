@@ -31,6 +31,7 @@ struct MinSearcher
     TracedSearchRes find_min_traced(util::NFunction func)
     {
         m_last_func.emplace(std::move(func));
+        m_replay_data.clear();
         return find_min_traced_impl();
     }
 

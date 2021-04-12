@@ -19,6 +19,7 @@ struct Function
 
 public:
     Function(std::string as_string, CalculateFunc calculate, Bounds bounds);
+    Function(CalculateFunc calculate, Bounds bounds);
 
     void reset(std::string as_string, CalculateFunc calculate);
 

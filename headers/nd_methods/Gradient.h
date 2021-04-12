@@ -15,7 +15,7 @@ protected:
     SearchRes find_min_impl() override;
     TracedSearchRes find_min_traced_impl() override;
 
-private:
+protected:
     double m_eps;
     double m_alpha;
 };

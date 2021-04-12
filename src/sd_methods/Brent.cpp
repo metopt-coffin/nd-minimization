@@ -1,4 +1,5 @@
 #include "sd_methods/Brent.h"
+#include "sd_methods/MinSearcher.h"
 
 #include "util/ReplayData.h"
 #include "util/VersionedData.h"
@@ -34,7 +35,7 @@ double sign(double val)
 
 } // anonymous namespace
 
-double Brent::find_min_impl() noexcept /*override*/
+SearchRes Brent::find_min_impl() noexcept /*override*/
 {
     const auto & fn = last_func();
     auto bnds = fn.bounds();
@@ -151,10 +152,10 @@ double Brent::find_min_impl() noexcept /*override*/
         }
     }
 
-    return x;
+    return {x, f_x};
 }
 
-double Brent::find_min_tracked_impl() noexcept /*override*/
+TracedSearchRes Brent::find_min_tracked_impl() noexcept /*override*/
 {
     using namespace util;
 
@@ -261,7 +262,7 @@ double Brent::find_min_tracked_impl() noexcept /*override*/
 
     m_replay_data.emplace_back<VdComment>(iter_num, "Answer is");
     m_replay_data.emplace_back<VdPoint>(iter_num, x, fn(x));
-    return x;
+    return {x, f_x, m_replay_data};
 }
 
 } // namespace min1d

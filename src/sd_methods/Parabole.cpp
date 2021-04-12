@@ -1,4 +1,5 @@
 #include "sd_methods/Parabole.h"
+#include "sd_methods/MinSearcher.h"
 
 #include "util/ReplayData.h"
 #include "util/VersionedData.h"
@@ -19,7 +20,7 @@ double count_parabole(std::pair<double, double> p1, std::pair<double, double> p2
     return (p1.first + p2.first - a1 / a2) / 2;
 }
 } // anonymous namespace
-double Parabole::find_min_impl() noexcept /*override*/
+SearchRes Parabole::find_min_impl() noexcept /*override*/
 {
     const auto & fn = last_func();
     auto bnds = fn.bounds();
@@ -49,12 +50,13 @@ double Parabole::find_min_impl() noexcept /*override*/
     }
     double f2 = fn(x2);
 
-    double prev_x;
+    double prev_x, prev_f;
     bool is_first_iteration = true;
     for (uint iter = 0; iter < ITER_MAX; iter++) {
         double new_x = count_parabole({x1, f1}, {x2, f2}, {x3, f3});
         if (!is_first_iteration && std::abs(new_x - prev_x) <= m_eps) {
             prev_x = new_x;
+            prev_f = fn(prev_x);
             break;
         }
         double new_f = fn(new_x);
@@ -108,13 +110,14 @@ double Parabole::find_min_impl() noexcept /*override*/
         }
 
         prev_x = new_x;
+        prev_f = new_f;
         is_first_iteration = false;
     }
 
-    return prev_x;
+    return {prev_x, prev_f};
 }
 
-double Parabole::find_min_tracked_impl() noexcept /*override*/
+TracedSearchRes Parabole::find_min_tracked_impl() noexcept /*override*/
 {
     using namespace util;
 
@@ -135,7 +138,7 @@ double Parabole::find_min_tracked_impl() noexcept /*override*/
     }
     double f2 = fn(x2);
 
-    double prev_x;
+    double prev_x, prev_f;
     for (; iter_num < ITER_MAX; iter_num++) {
         m_replay_data.emplace_back<VdComment>(iter_num, "Points x1, x2, x3 are:");
         m_replay_data.emplace_back<VdPoint>(iter_num, x1, f1);
@@ -148,6 +151,7 @@ double Parabole::find_min_tracked_impl() noexcept /*override*/
         double new_x = (x1 + x2 - a1 / a2) / 2;
         if (iter_num && std::abs(new_x - prev_x) <= m_eps) {
             prev_x = new_x;
+            prev_f = fn(prev_x);
             break;
         }
         double new_f = fn(new_x);
@@ -179,11 +183,12 @@ double Parabole::find_min_tracked_impl() noexcept /*override*/
         }
 
         prev_x = new_x;
+        prev_f = new_f;
     }
 
     m_replay_data.emplace_back<VdComment>(iter_num, "Answer is");
     m_replay_data.emplace_back<VdPoint>(iter_num, prev_x, fn(prev_x));
-    return prev_x;
+    return {prev_x, prev_f, m_replay_data};
 }
 
 } // namespace min1d

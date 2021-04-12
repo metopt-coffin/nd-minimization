@@ -22,13 +22,14 @@ int main()
 
     agg.add_function(util::QuadMatrix{{{64., 19.}, {19., 32.}}}, util::Vector{{32., -20.}}, 6.);
     agg.select_function(0);
-    agg.select_nd_method(0);
+    agg.select_nd_method(1);
     auto search_res = agg.search_min_traced();
 
     constexpr auto printer = util::overload(
             [](const util::VdComment & comment) { println(comment.comment); },
-            [](const util::VdVector & vector) { println(vector.version(), ": ", vector.vec()); },
-            [](const util::VdDouble & dbl) { println(dbl.version(), ": ", dbl.value); },
+            [](const util::VdVector & vector) { println(vector.version(), ":", vector.vec()); },
+            [](const util::VdDouble & dbl) { println(dbl.version(), ":", dbl.value); },
+            [](const util::VdPoint & point) { println(point.version(), ": x =", point.x, "y =", point.y); },
             [](const auto & other) { println("not implemented for: ", static_cast<uint>(other.get_kind())); });
     std::for_each(search_res.replay_data.begin(), search_res.replay_data.end(), [&printer](auto & data_part) {
         data_part->call_func(printer);

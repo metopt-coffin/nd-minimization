@@ -1,5 +1,6 @@
 #include "MinimizatorsAggregator.h"
 
+#include "nd_methods/FastestDescent.h"
 #include "nd_methods/Gradient.h"
 #include "sd_methods/Golden.h"
 
@@ -21,8 +22,10 @@ namespace min_nd {
 
 auto MinimizatorsAggregator::setup() -> MaybeErrorText
 {
-    m_nd_methods.emplace_back(new Gradient(0.000001, 1000.));
     m_sd_methods.emplace_back(new min1d::Golden(0.000001));
+
+    m_nd_methods.emplace_back(new Gradient(0.000001, 1000.));
+    m_nd_methods.emplace_back(new FastestDescent(0.000001, 1000., curr_sd_searcher()));
     return std::nullopt;
 }
 

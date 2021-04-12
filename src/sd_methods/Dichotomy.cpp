@@ -1,11 +1,12 @@
 #include "sd_methods/Dichotomy.h"
+#include "sd_methods/MinSearcher.h"
 
 #include "util/ReplayData.h"
 #include "util/VersionedData.h"
 
 namespace min1d {
 
-double Dichotomy::find_min_impl() noexcept /*override*/
+SearchRes Dichotomy::find_min_impl() noexcept /*override*/
 {
     const auto & fn = last_func();
     auto bnds = fn.bounds();
@@ -37,10 +38,10 @@ double Dichotomy::find_min_impl() noexcept /*override*/
             bnds.from = x_left;
         }
     }
-    return mid;
+    return {mid, fn(mid)};
 }
 
-double Dichotomy::find_min_tracked_impl() noexcept /*override*/
+TracedSearchRes Dichotomy::find_min_tracked_impl() noexcept /*override*/
 {
     using namespace util;
 
@@ -71,7 +72,7 @@ double Dichotomy::find_min_tracked_impl() noexcept /*override*/
     }
     m_replay_data.emplace_back<VdPoint>(iter_num, mid, fn(mid));
 
-    return mid;
+    return {mid, fn(mid), m_replay_data};
 }
 
 } // namespace min1d

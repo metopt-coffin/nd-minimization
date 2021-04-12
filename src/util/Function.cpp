@@ -10,6 +10,10 @@ Function::Function(std::string as_string, CalculateFunc calculate, Bounds bounds
     , m_bounds(bounds)
 {}
 
+Function::Function(CalculateFunc calculate, Bounds bounds)
+    : Function("none", std::move(calculate), bounds)
+{}
+
 void Function::reset(std::string as_string, CalculateFunc calculate)
 {
     m_as_string = std::move(as_string);
