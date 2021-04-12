@@ -1,8 +1,8 @@
 #include "MinimizatorsAggregator.h"
 
 #include "nd_methods/Gradient.h"
-
 #include "sd_methods/Golden.h"
+
 #include "util/Vector.h"
 
 #include <optional>
@@ -50,4 +50,4 @@ auto MinimizatorsAggregator::add_function(util::QuadMatrix a, util::Vector b, do
     return std::nullopt;
 }
 
-}
+} // namespace min_nd

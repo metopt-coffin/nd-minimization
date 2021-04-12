@@ -2,6 +2,7 @@
 
 #include "nd_methods/MinSearcher.h"
 #include "sd_methods/MinSearcher.h"
+
 #include "util/Vector.h"
 
 #include <memory>

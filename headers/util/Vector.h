@@ -24,8 +24,7 @@ struct Vector
 
     double operator*(const Vector & rhs) const noexcept
     {
-        return std::transform_reduce(m_data.begin(), m_data.end(), rhs.m_data.begin(), 0.,
-            std::plus<double>{}, std::multiplies<double>{});
+        return std::transform_reduce(m_data.begin(), m_data.end(), rhs.m_data.begin(), 0., std::plus<double>{}, std::multiplies<double>{});
     }
 
     Vector operator*(double scalar) const noexcept
@@ -45,7 +44,7 @@ struct Vector
 
     double length_pow2() const noexcept { return *this * *this; }
 
-    friend std::ostream & operator << (std::ostream & out, const Vector & vec)
+    friend std::ostream & operator<<(std::ostream & out, const Vector & vec)
     {
         out << "{";
         std::for_each(vec.m_data.begin(), vec.m_data.end(), [&out, first(true)](double x) mutable {
@@ -66,8 +65,7 @@ private:
     {
         assert(dims() == rhs.dims() && "Vector::plus_minus dimension mismatch");
         std::vector<double> res(dims());
-        std::transform(m_data.begin(), m_data.end(), rhs.m_data.begin(), res.begin(),
-            std::forward<Func>(to_apply));
+        std::transform(m_data.begin(), m_data.end(), rhs.m_data.begin(), res.begin(), std::forward<Func>(to_apply));
         return Vector{std::move(res)};
     }
 

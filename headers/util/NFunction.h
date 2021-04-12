@@ -2,6 +2,7 @@
 
 #include "Misc.h"
 #include "QuadMatrix.h"
+
 #include "util/Vector.h"
 
 namespace util {

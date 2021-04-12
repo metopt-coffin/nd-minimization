@@ -10,6 +10,7 @@ struct Gradient : MinSearcher
         : m_eps(eps)
         , m_alpha(max_step)
     {}
+
 protected:
     SearchRes find_min_impl() override;
     TracedSearchRes find_min_traced_impl() override;
@@ -19,4 +20,4 @@ private:
     double m_alpha;
 };
 
-}
+} // namespace min_nd

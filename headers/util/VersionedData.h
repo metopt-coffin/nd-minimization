@@ -10,7 +10,7 @@ namespace util {
 struct Vector;
 
 
-#define M(vd_data_name) vd_data_name ## Kind,
+#define M(vd_data_name) vd_data_name##Kind,
 enum struct VdDataKind
 {
 #include "VersionedDataKinds.inl"
@@ -35,7 +35,7 @@ struct VersionedData
     case VdDataKind::type##Kind: return func(reinterpret_cast<const type &>(*this));
 
         switch (get_kind()) {
-            #include "VersionedDataKinds.inl"
+#include "VersionedDataKinds.inl"
         default: assert(false && "There is no such VersionedData kind");
         }
     }

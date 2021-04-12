@@ -8,8 +8,15 @@
 
 namespace min_nd {
 
-struct SearchRes { util::Vector min_point; double min; };
-struct TracedSearchRes : SearchRes { const util::ReplayData & replay_data; };
+struct SearchRes
+{
+    util::Vector min_point;
+    double min;
+};
+struct TracedSearchRes : SearchRes
+{
+    const util::ReplayData & replay_data;
+};
 
 struct MinSearcher
 {
@@ -31,8 +38,6 @@ struct MinSearcher
     const util::NFunction & curr_func() const { return *m_last_func; }
 
 protected:
-
-
 protected:
     virtual SearchRes find_min_impl() = 0;
     virtual TracedSearchRes find_min_traced_impl() = 0;

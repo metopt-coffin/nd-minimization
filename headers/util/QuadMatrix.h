@@ -29,8 +29,7 @@ struct QuadMatrix
 
         std::vector<double> res(rhs.dims(), 0);
         std::transform(m_data.begin(), m_data.end(), res.begin(), [&rhs](auto row) {
-            return std::transform_reduce(row.begin(), row.end(), rhs.m_data.begin(), 0.,
-                std::plus<double>{}, std::multiplies<double>{});
+            return std::transform_reduce(row.begin(), row.end(), rhs.m_data.begin(), 0., std::plus<double>{}, std::multiplies<double>{});
         });
         return Vector(std::move(res));
     }

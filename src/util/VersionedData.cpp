@@ -9,4 +9,4 @@ VdVector::VdVector(uint version, const Vector & vec)
     , m_vec(new Vector(vec))
 {}
 
-}
+} // namespace util

@@ -16,7 +16,8 @@ struct RectangledVector
     using const_iterator = Iterator<true>;
 
     template <bool is_const>
-    struct RowViewImpl {
+    struct RowViewImpl
+    {
         friend struct Iterator<is_const>;
 
         using MaybeConstOwner = std::conditional_t<is_const, const RectangledVector &, RectangledVector &>;
@@ -41,8 +42,8 @@ struct RectangledVector
         iter end() const { return m_end; }
 
         template <class Dummy = void, std::enable_if_t<!is_const, Dummy>>
-        T & operator [] (std::size_t idx) noexcept { return *(m_begin + idx); }
-        const T & operator [] (std::size_t idx) noexcept { return *(m_begin + idx); }
+        T & operator[](std::size_t idx) noexcept { return *(m_begin + idx); }
+        const T & operator[](std::size_t idx) noexcept { return *(m_begin + idx); }
 
         iter m_begin;
         iter m_end;
@@ -68,7 +69,7 @@ public:
         if (m_height > 0) {
             m_width = data[0].size();
             assert(std::all_of(data.begin(), data.end(), [width{m_width}](const auto & row) { return width == row.size(); }) &&
-                "RectangledVector is created from non-rectangled one");
+                   "RectangledVector is created from non-rectangled one");
         } else {
             m_width = 0;
         }
@@ -92,7 +93,7 @@ public:
     const_iterator begin() const { return const_iterator(*this); }
     const_iterator end() const { return const_iterator(*this, m_height); }
 
-    RowView operator [] (std::size_t idx) noexcept { return RowView(*this, idx); }
+    RowView operator[](std::size_t idx) noexcept { return RowView(*this, idx); }
 
     std::size_t rows() const noexcept { return m_height; }
     std::size_t cols() const noexcept { return m_width; }
@@ -120,43 +121,43 @@ struct RectangledVector<T>::Iterator
         , m_width(m_val.end() - m_val.begin())
     {}
 
-    reference operator * () { return m_val; }
-    pointer operator -> () { return &m_val; }
+    reference operator*() { return m_val; }
+    pointer operator->() { return &m_val; }
 
-    Iterator & operator ++ ()
+    Iterator & operator++()
     {
         m_val.m_begin += m_width;
         m_val.m_end += m_width;
         return *this;
     }
-    Iterator operator ++ (int)
+    Iterator operator++(int)
     {
         Iterator prev = *this;
         operator++();
         return prev;
     }
 
-    Iterator & operator -- ()
+    Iterator & operator--()
     {
         m_val.m_begin -= m_width;
         m_val.m_end -= m_width;
         return *this;
     }
-    Iterator operator -- (int)
+    Iterator operator--(int)
     {
         Iterator next = *this;
         operator--();
         return next;
     }
 
-    Iterator & operator += (difference_type n)
+    Iterator & operator+=(difference_type n)
     {
         n *= m_width;
         m_val.m_begin += n;
         m_val.m_end += n;
         return *this;
     }
-    Iterator & operator -= (difference_type n)
+    Iterator & operator-=(difference_type n)
     {
         n *= m_width;
         m_val.m_begin -= n;
@@ -164,38 +165,38 @@ struct RectangledVector<T>::Iterator
         return *this;
     }
 
-    friend Iterator operator + (Iterator & it, difference_type n)
+    friend Iterator operator+(Iterator & it, difference_type n)
     {
         Iterator temp(it);
         temp += n;
         return temp;
     }
-    friend Iterator operator + (difference_type n, Iterator & it)
+    friend Iterator operator+(difference_type n, Iterator & it)
     {
         Iterator temp(it);
         temp += n;
         return temp;
     }
 
-    difference_type operator - (const Iterator & rhs) const
+    difference_type operator-(const Iterator & rhs) const
     {
         return (m_val.m_begin - rhs.m_val.m_begin) / m_width;
     }
 
-    reference operator [] (difference_type n)
+    reference operator[](difference_type n)
     {
         return *(*this + n);
     }
 
 #define DEFINE_COMPARISON_OP(op) \
-bool operator op (const Iterator & rhs) const { return m_val.m_begin op rhs.m_val.m_begin; }
+    bool operator op(const Iterator & rhs) const { return m_val.m_begin op rhs.m_val.m_begin; }
 
-DEFINE_COMPARISON_OP(==)
-DEFINE_COMPARISON_OP(!=)
-DEFINE_COMPARISON_OP(<)
-DEFINE_COMPARISON_OP(>)
-DEFINE_COMPARISON_OP(<=)
-DEFINE_COMPARISON_OP(>=)
+    DEFINE_COMPARISON_OP(==)
+    DEFINE_COMPARISON_OP(!=)
+    DEFINE_COMPARISON_OP(<)
+    DEFINE_COMPARISON_OP(>)
+    DEFINE_COMPARISON_OP(<=)
+    DEFINE_COMPARISON_OP(>=)
 #undef DEFINE_COMPARISON_OP
 
 private:
