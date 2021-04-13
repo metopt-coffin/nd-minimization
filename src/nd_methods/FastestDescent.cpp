@@ -24,10 +24,12 @@ SearchRes FastestDescent::find_min_impl()
 
     util::Vector grad = func.grad(curr);
     min1d::SearchRes sd_min;    // Minimum found on the chosen direction
-    while (grad.length_pow2() >= eps_pow2) {
+    uint iter_num = 0;      // To prevent infinite or very long cycles
+    while (grad.length_pow2() >= eps_pow2 && iter_num < MAX_ITER) {
         sd_min = find_sd_min({[&](double x) { return func(curr - x * grad); }, {0., m_alpha}});
         curr = curr - sd_min.min_point * grad;
         grad = func.grad(curr);
+        iter_num++;
     }
 
     return {curr, sd_min.min};
@@ -48,7 +50,7 @@ TracedSearchRes FastestDescent::find_min_traced_impl()
     min1d::SearchRes sd_min;
 
     uint iter_num = 0;
-    while (grad.length_pow2() >= eps_pow2) {
+    while (grad.length_pow2() >= eps_pow2 && iter_num < MAX_ITER) {
         m_replay_data.emplace_back<util::VdComment>(iter_num, "x, grad");
         m_replay_data.emplace_back<util::VdVector>(iter_num, curr);
         m_replay_data.emplace_back<util::VdVector>(iter_num, grad);

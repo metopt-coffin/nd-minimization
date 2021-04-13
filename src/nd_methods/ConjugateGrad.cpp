@@ -32,9 +32,9 @@ SearchRes ConjucateGrad::find_min_impl()
     double grad_len_pow2 = grad.length_pow2();
     util::Vector a_by_p(func.dims());
     double beta = 0.;
-    uint iter_num = 0;
+    uint iter_num = 0; // to track number of iterations and to prevent infinite or very long cycles.
 
-    while (grad_len_pow2 >= eps_pow2) {
+    while (grad_len_pow2 >= eps_pow2 && iter_num < MAX_ITER) {
         /*
          * "Restart" the method to avoid 
          * accumulating computing error
@@ -75,7 +75,7 @@ TracedSearchRes ConjucateGrad::find_min_traced_impl()
     double beta = 0.;
     uint iter_num = 0;
 
-    while (grad_len_pow2 >= eps_pow2) {
+    while (grad_len_pow2 >= eps_pow2 && iter_num < MAX_ITER) {
         if (iter_num % func.dims() == 0) {
             beta = 0.;
         }

@@ -39,6 +39,7 @@ struct MinSearcher
     const util::NFunction & curr_func() const { return *m_last_func; }
 
 protected:
+    static const uint MAX_ITER = 1000;
 protected:
     virtual SearchRes find_min_impl() = 0;
     virtual TracedSearchRes find_min_traced_impl() = 0;
