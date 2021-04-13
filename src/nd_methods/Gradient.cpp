@@ -9,9 +9,19 @@
 #include <iostream>
 
 namespace min_nd {
-
+    /*
+     * Idea: 
+     * calculate the gradient;
+     * find the next point in the steepest direction (in the direction of antigradient);
+     * if the new value is less than current, then move to it and repeat;
+     * otherwise, reduce the step size and try moving again.
+     * Exit, when absolute value of the gradient is less than required precision.
+     */
 SearchRes Gradient::find_min_impl()
 {
+    /*
+     * Initialize starting values;
+     */
     double eps_pow2 = m_eps * m_eps;
     double alpha = m_alpha;
     auto & func = curr_func();
@@ -24,16 +34,23 @@ SearchRes Gradient::find_min_impl()
 
     auto grad = func.grad(curr_vec);
 
+    // recalc function
     auto count_next = [&] {
         next_vec = curr_vec - alpha * grad;
         f_next = func(next_vec);
     };
 
-    uint iter_num = 0;
+    uint iter_num = 0;  // To prevent infinite or very long cycles
     for (auto length = grad.length_pow2(); length >= eps_pow2 && iter_num < MAX_ITER; length = grad.length_pow2()) {
         for (count_next(); f_next >= f_curr && alpha > m_eps; count_next()) {
+            /*
+             * New value is bigger than current. Reduce the step size and try again;
+             */
             alpha /= 2;
         }
+        /*
+         * New value is less than current. Move to it and continue iterating.
+         */
         alpha = m_alpha;
         curr_vec = std::move(next_vec);
         f_curr = f_next;
@@ -44,6 +61,9 @@ SearchRes Gradient::find_min_impl()
     return {curr_vec, f_curr};
 }
 
+/*
+ * Version with tracing output.
+ */
 TracedSearchRes Gradient::find_min_traced_impl()
 {
     double eps_pow2 = m_eps * m_eps;

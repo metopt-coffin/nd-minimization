@@ -13,11 +13,20 @@ struct Gradient : ConjucateGrad
     {}
 
 protected:
+    /*
+     * Find n-dimensional function's minimum
+     * using gradient descent method.
+     */
     SearchRes find_min_impl() override;
+    /*
+     * Find n-dimensional function's minimum
+     * using gradient descent method.
+     * Outputs tracing information.
+     */
     TracedSearchRes find_min_traced_impl() override;
 
 protected:
-    double m_alpha;
+    double m_alpha; // max step
 };
 
 } // namespace min_nd
