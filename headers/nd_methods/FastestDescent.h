@@ -35,7 +35,7 @@ protected:
      */
     TracedSearchRes find_min_traced_impl() override;
 
-private:
+protected:
     /*
      * Solve the one dimensional minimization problem.
      */

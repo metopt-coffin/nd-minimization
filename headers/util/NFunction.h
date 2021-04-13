@@ -26,6 +26,10 @@ struct NFunction
 
     std::size_t dims() const noexcept { return m_a.dims(); }
 
+    const QuadMatrix & a() const noexcept { return m_a; }
+    const Vector & b() const noexcept { return m_b; }
+    double c() const noexcept { return m_c; }
+
 private:
     QuadMatrix m_a;
     Vector m_b;

@@ -20,9 +20,9 @@ int main()
     min_nd::MinimizatorsAggregator agg;
     agg.setup();
 
-    agg.add_function(util::QuadMatrix{{{64., 19.}, {19., 32.}}}, util::Vector{{32., -20.}}, 6.);
+    agg.add_function(util::QuadMatrix{{{100234., 0.}, {0., 2.}}}, util::Vector{{420., -69.}}, 6.);
     agg.select_function(0);
-    agg.select_nd_method(1);
+    agg.select_nd_method(2);
     auto search_res = agg.search_min_traced();
 
     constexpr auto printer = util::overload(
