@@ -23,7 +23,7 @@ protected:
     SearchRes find_min_impl() override;
     TracedSearchRes find_min_traced_impl() override;
 
-private:
+protected:
     min1d::SearchRes find_sd_min(util::Function && func) { return m_sd_searcher->find_min(std::move(func)); }
     const util::Function & last_sd_func() const noexcept { return m_sd_searcher->last_func(); }
 

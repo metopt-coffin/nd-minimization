@@ -1,5 +1,6 @@
 #include "MinimizatorsAggregator.h"
 
+#include "nd_methods/ConjugateGrad.h"
 #include "nd_methods/FastestDescent.h"
 #include "nd_methods/Gradient.h"
 #include "sd_methods/Golden.h"
@@ -26,6 +27,8 @@ auto MinimizatorsAggregator::setup() -> MaybeErrorText
 
     m_nd_methods.emplace_back(new Gradient(0.000001, 1000.));
     m_nd_methods.emplace_back(new FastestDescent(0.000001, 1000., curr_sd_searcher()));
+    m_nd_methods.emplace_back(new ConjucateGrad(0.000001));
+
     return std::nullopt;
 }
 
