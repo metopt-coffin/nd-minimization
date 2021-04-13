@@ -1,13 +1,14 @@
 #pragma once
 
+#include "nd_methods/ConjugateGrad.h"
 #include "nd_methods/MinSearcher.h"
 
 namespace min_nd {
 
-struct Gradient : MinSearcher
+struct Gradient : ConjucateGrad
 {
     Gradient(double eps, double max_step)
-        : m_eps(eps)
+        : ConjucateGrad(eps)
         , m_alpha(max_step)
     {}
 
@@ -15,8 +16,7 @@ protected:
     SearchRes find_min_impl() override;
     TracedSearchRes find_min_traced_impl() override;
 
-private:
-    double m_eps;
+protected:
     double m_alpha;
 };
 

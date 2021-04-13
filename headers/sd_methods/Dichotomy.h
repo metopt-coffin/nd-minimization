@@ -27,14 +27,14 @@ protected:
      * Find unimodal function's minimum
      * using dichotomy method.
      */
-    double find_min_impl() noexcept override;
+    SearchRes find_min_impl() noexcept override;
 
     /*
      * Find unimodal function's minimum
      * using dichotomy method.
      * Outputs tracing information.
      */
-    double find_min_tracked_impl() noexcept override;
+    TracedSearchRes find_min_tracked_impl() noexcept override;
 
 private:
     double m_sigma; // method's parameter
