@@ -5,6 +5,7 @@
 #include "nd_methods/Gradient.h"
 #include "sd_methods/Golden.h"
 
+#include "util/DiagMatrix.h"
 #include "util/Vector.h"
 
 #include <optional>
@@ -50,7 +51,7 @@ auto MinimizatorsAggregator::select_function(uint func_id) -> MaybeErrorText
     return err;
 }
 
-auto MinimizatorsAggregator::add_function(util::QuadMatrix a, util::Vector b, double c) -> MaybeErrorText
+auto MinimizatorsAggregator::add_function(util::DiagMatrix a, util::Vector b, double c) -> MaybeErrorText
 {
     m_funcs.emplace_back(std::move(a), std::move(b), c);
     return std::nullopt;

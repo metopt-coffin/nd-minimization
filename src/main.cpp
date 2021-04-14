@@ -1,7 +1,7 @@
 #include "MinimizatorsAggregator.h"
 
+#include "util/DiagMatrix.h"
 #include "util/Misc.h"
-#include "util/QuadMatrix.h"
 #include "util/Vector.h"
 #include "util/VersionedData.h"
 
@@ -20,7 +20,7 @@ int main()
     min_nd::MinimizatorsAggregator agg;
     agg.setup();
 
-    agg.add_function(util::QuadMatrix{{{100234., 0.}, {0., 2.}}}, util::Vector{{420., -69.}}, 6.);
+    agg.add_function(util::DiagMatrix(2, 100000., 2.), util::Vector{{420., -69.}}, 6.);
     agg.select_function(0);
     agg.select_nd_method(2);
     auto search_res = agg.search_min_traced();

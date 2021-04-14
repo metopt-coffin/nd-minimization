@@ -13,7 +13,9 @@ struct QuadMatrix;
 
 struct Vector
 {
+    friend struct DiagMatrix;
     friend struct QuadMatrix;
+
     explicit Vector(std::size_t dims)
         : m_data(dims, 0.)
     {}
