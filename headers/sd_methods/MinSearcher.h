@@ -8,23 +8,32 @@
 
 namespace min1d {
 
+struct SearchRes
+{
+    double min_point, min;
+};
+
+struct TracedSearchRes : SearchRes
+{
+    const util::ReplayData & replay_data;
+};
+
 struct MinSearcher
 {
     virtual ~MinSearcher() = default;
 
-    double find_min(util::Function func)
+    SearchRes find_min(util::Function func)
     {
         m_last_func.emplace(std::move(func));
-        m_last_func.reset();
+        m_last_func->reset();
         return find_min_impl();
     }
-    const util::ReplayData & find_min_tracked(util::Function func)
+    TracedSearchRes find_min_tracked(util::Function func)
     {
         m_last_func.emplace(std::move(func));
         m_replay_data.clear();
-        m_last_func.reset();
-        find_min_tracked_impl();
-        return m_replay_data;
+        m_last_func->reset();
+        return find_min_tracked_impl();
     }
 
     const util::ReplayData & replay_data() const noexcept { return m_replay_data; }
@@ -35,8 +44,8 @@ public:
     virtual std::string_view method_name() const noexcept = 0;
 
 protected:
-    virtual double find_min_impl() noexcept = 0;
-    virtual double find_min_tracked_impl() noexcept = 0;
+    virtual SearchRes find_min_impl() noexcept = 0;
+    virtual TracedSearchRes find_min_tracked_impl() noexcept = 0;
 
 protected:
     util::ReplayData m_replay_data;

@@ -1,5 +1,7 @@
 #include "sd_methods/Fibonacci.h"
 
+#include "sd_methods/MinSearcher.h"
+
 #include "util/ReplayData.h"
 #include "util/VersionedData.h"
 
@@ -8,7 +10,7 @@
 
 namespace min1d {
 
-double Fibonacci::find_min_impl() noexcept /*override*/
+SearchRes Fibonacci::find_min_impl() noexcept /*override*/
 {
     const auto & fn = last_func();
     auto bnds = fn.bounds();
@@ -65,10 +67,11 @@ double Fibonacci::find_min_impl() noexcept /*override*/
             f_left = fn(x_left);
         }
     }
-    return bnds.middle();
+    x_left = bnds.middle();
+    return {x_left, fn(x_left)};
 }
 
-double Fibonacci::find_min_tracked_impl() noexcept /*override*/
+TracedSearchRes Fibonacci::find_min_tracked_impl() noexcept /*override*/
 {
     using namespace util;
 
@@ -122,7 +125,7 @@ double Fibonacci::find_min_tracked_impl() noexcept /*override*/
     double mid = bnds.middle();
     m_replay_data.emplace_back<VdSegment>(n - 2, bnds.from, bnds.to);
     m_replay_data.emplace_back<VdPoint>(n - 2, mid, fn(mid));
-    return mid;
+    return {mid, fn(mid), m_replay_data};
 }
 
 } // namespace min1d

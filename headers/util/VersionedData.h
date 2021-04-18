@@ -7,18 +7,17 @@
 
 namespace util {
 
+struct Vector;
+
+
+#define M(vd_data_name) vd_data_name##Kind,
 enum struct VdDataKind
 {
-    VdPointKind,
-    VdParaboleKind,
-    VdSegmentKind,
-    VdCommentKind,
+#include "VersionedDataKinds.inl"
 };
 
-struct VdPoint;
-struct VdParabole;
-struct VdSegment;
-struct VdComment;
+#define M(vd_data_name) struct vd_data_name;
+#include "VersionedDataKinds.inl"
 
 struct VersionedData
 {
@@ -33,17 +32,12 @@ struct VersionedData
     auto call_func(Func && func) const
     {
 #define M(type) \
-    case VdDataKind::type##Kind: return func(reinterpret_cast<const type &>(*this))
+    case VdDataKind::type##Kind: return func(reinterpret_cast<const type &>(*this));
 
         switch (get_kind()) {
-            M(VdPoint);
-            M(VdParabole);
-            M(VdSegment);
-            M(VdComment);
+#include "VersionedDataKinds.inl"
         default: assert(false && "There is no such VersionedData kind");
         }
-
-#undef M
     }
 
     uint version() const noexcept { return m_version; }
@@ -102,6 +96,30 @@ struct VdComment : VersionedData
     VdDataKind get_kind() const noexcept override { return VdDataKind::VdCommentKind; }
 
     std::string comment;
+};
+
+struct VdDouble : VersionedData
+{
+    VdDouble(uint version, double value)
+        : VersionedData(version)
+        , value(value)
+    {}
+
+    VdDataKind get_kind() const noexcept override { return VdDataKind::VdDoubleKind; }
+
+    double value;
+};
+
+struct VdVector : VersionedData
+{
+    VdVector(uint version, const Vector & vec);
+
+    const Vector & vec() const { return *m_vec; }
+
+    VdDataKind get_kind() const noexcept override { return VdDataKind::VdVectorKind; }
+
+private:
+    std::unique_ptr<Vector> m_vec;
 };
 
 } // namespace util

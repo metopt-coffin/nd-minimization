@@ -1,10 +1,12 @@
 #include "sd_methods/Golden.h"
 
+#include "sd_methods/MinSearcher.h"
+
 #include "util/ReplayData.h"
 #include "util/VersionedData.h"
 
 namespace min1d {
-double Golden::find_min_impl() noexcept /*override*/
+SearchRes Golden::find_min_impl() noexcept /*override*/
 {
     const auto & fn = last_func();
     auto bnds = fn.bounds();
@@ -49,10 +51,11 @@ double Golden::find_min_impl() noexcept /*override*/
         }
     }
 
-    return bnds.middle();
+    x_left = bnds.middle();
+    return {x_left, fn(x_left)};
 }
 
-double Golden::find_min_tracked_impl() noexcept /*override*/
+TracedSearchRes Golden::find_min_tracked_impl() noexcept /*override*/
 {
     using namespace util;
 
@@ -94,7 +97,7 @@ double Golden::find_min_tracked_impl() noexcept /*override*/
     double mid = bnds.middle();
     m_replay_data.emplace_back<VdSegment>(iter_num, bnds.from, bnds.to);
     m_replay_data.emplace_back<VdPoint>(iter_num, mid, fn(mid));
-    return mid;
+    return {mid, fn(mid), m_replay_data};
 }
 
 } // namespace min1d
