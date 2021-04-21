@@ -27,7 +27,7 @@ struct MinimizatorsAggregator
     MaybeErrorText select_sd_method(uint method_id) { return select(method_id, m_sd_methods.size(), m_curr_sd_method); }
     MaybeErrorText select_function(uint func_id);
 
-    MaybeErrorText add_function(util::DiagMatrix a, util::Vector b, double c /* Or just NFunction? Will see */);
+    MaybeErrorText add_function(util::DiagMatrix a, util::Vector b, double c, double eigenvalue);
 
     SearchRes search_min() { return curr_nd_searcher().find_min(); }
     TracedSearchRes search_min_traced() { return curr_nd_searcher().find_min_traced(); }

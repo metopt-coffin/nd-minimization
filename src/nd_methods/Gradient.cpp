@@ -23,8 +23,9 @@ SearchRes Gradient::find_min_impl()
      * Initialize starting values;
      */
     double eps_pow2 = m_eps * m_eps;
-    double alpha = m_alpha;
     auto & func = curr_func();
+    m_alpha = 1 / func.eigenvalue();
+    double alpha = m_alpha;
 
     util::Vector curr_vec(func.dims());
     double f_curr = func(curr_vec);
@@ -67,8 +68,9 @@ SearchRes Gradient::find_min_impl()
 TracedSearchRes Gradient::find_min_traced_impl()
 {
     double eps_pow2 = m_eps * m_eps;
+    auto& func = curr_func();
+    m_alpha = 1 / func.eigenvalue();
     double alpha = m_alpha;
-    auto & func = curr_func();
 
     m_replay_data.emplace_back<util::VdComment>(0, "func dims");
     m_replay_data.emplace_back<util::VdDouble>(0, func.dims());
@@ -97,7 +99,8 @@ TracedSearchRes Gradient::find_min_traced_impl()
         for (count_next(); f_next >= f_curr && alpha > m_eps; count_next()) {
             alpha /= 2;
         }
-        m_replay_data.emplace_back<util::VdComment>(iter_num, "shift");
+        m_replay_data.emplace_back<util::VdComment>(iter_num, "alpha, shift");
+        m_replay_data.emplace_back<util::VdDouble>(iter_num, alpha);
         m_replay_data.emplace_back<util::VdVector>(iter_num, -alpha * grad);
 
         alpha = m_alpha;
@@ -106,6 +109,11 @@ TracedSearchRes Gradient::find_min_traced_impl()
         grad = func.grad(curr_vec);
         ++iter_num;
     }
+    m_replay_data.emplace_back<util::VdComment>(iter_num, "x and f(x)");
+    m_replay_data.emplace_back<util::VdVector>(iter_num, curr_vec);
+    m_replay_data.emplace_back<util::VdDouble>(iter_num, f_curr);
+    m_replay_data.emplace_back<util::VdComment>(iter_num, "grad");
+    m_replay_data.emplace_back<util::VdVector>(iter_num, grad);
 
     return {curr_vec, f_curr, m_replay_data};
 }

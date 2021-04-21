@@ -18,6 +18,7 @@ SearchRes FastestDescent::find_min_impl()
 {
     const double eps_pow2 = m_eps * m_eps;
     auto & func = curr_func();
+    m_alpha = 1 / func.eigenvalue();
 
     util::Vector curr(func.dims()); // Vector of current coordinates
     double f_curr = func(curr);
@@ -42,6 +43,7 @@ TracedSearchRes FastestDescent::find_min_traced_impl()
 {
     const double eps_pow2 = m_eps * m_eps;
     auto & func = curr_func();
+    m_alpha = 1 / func.eigenvalue();
 
     util::Vector curr(func.dims());
     double f_curr = func(curr);
@@ -51,8 +53,9 @@ TracedSearchRes FastestDescent::find_min_traced_impl()
 
     uint iter_num = 0;
     while (grad.length_pow2() >= eps_pow2 && iter_num < MAX_ITER) {
-        m_replay_data.emplace_back<util::VdComment>(iter_num, "x, grad");
+        m_replay_data.emplace_back<util::VdComment>(iter_num, "x, f, grad");
         m_replay_data.emplace_back<util::VdVector>(iter_num, curr);
+        m_replay_data.emplace_back<util::VdDouble>(iter_num, func(curr));
         m_replay_data.emplace_back<util::VdVector>(iter_num, grad);
 
         sd_min = find_sd_min({[&](double x) { return func(curr - x * grad); }, {0., m_alpha}});
@@ -66,7 +69,9 @@ TracedSearchRes FastestDescent::find_min_traced_impl()
 
         ++iter_num;
     }
-
+    m_replay_data.emplace_back<util::VdComment>(iter_num, "x, grad");
+    m_replay_data.emplace_back<util::VdVector>(iter_num, curr);
+    m_replay_data.emplace_back<util::VdVector>(iter_num, grad);
     return {curr, sd_min.min, m_replay_data};
 }
 
