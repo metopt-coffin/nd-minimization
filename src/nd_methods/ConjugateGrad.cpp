@@ -80,14 +80,17 @@ TracedSearchRes ConjucateGrad::find_min_traced_impl()
             beta = 0.;
         }
 
-        m_replay_data.emplace_back<util::VdComment>(iter_num, "x, grad, p");
+        m_replay_data.emplace_back<util::VdComment>(iter_num, "x, f, grad, p");
         m_replay_data.emplace_back<util::VdVector>(iter_num, curr);
+        m_replay_data.emplace_back<util::VdDouble>(iter_num, func(curr));
         m_replay_data.emplace_back<util::VdVector>(iter_num, grad);
         m_replay_data.emplace_back<util::VdVector>(iter_num, p);
 
         a_by_p = func.a() * p;
         double alpha = grad_len_pow2 / (a_by_p * p);
-
+        m_replay_data.emplace_back<util::VdComment>(iter_num, "alpha, beta");
+        m_replay_data.emplace_back<util::VdDouble>(iter_num, alpha);
+        m_replay_data.emplace_back<util::VdDouble>(iter_num, beta);
         m_replay_data.emplace_back<util::VdComment>(iter_num, "x shift");
         m_replay_data.emplace_back<util::VdVector>(iter_num, alpha * p);
 
@@ -99,6 +102,11 @@ TracedSearchRes ConjucateGrad::find_min_traced_impl()
         grad_len_pow2 = grad.length_pow2();
         iter_num++;
     }
+
+    m_replay_data.emplace_back<util::VdComment>(iter_num, "x, grad, p");
+    m_replay_data.emplace_back<util::VdVector>(iter_num, curr);
+    m_replay_data.emplace_back<util::VdVector>(iter_num, grad);
+    m_replay_data.emplace_back<util::VdVector>(iter_num, p);
 
     return {curr, func(curr), m_replay_data};
 }

@@ -4,6 +4,8 @@
 #include "nd_methods/FastestDescent.h"
 #include "nd_methods/Gradient.h"
 #include "sd_methods/Golden.h"
+#include "sd_methods/Brent.h"
+#include "sd_methods/Dichotomy.h"
 
 #include "util/DiagMatrix.h"
 #include "util/Vector.h"
@@ -51,9 +53,9 @@ auto MinimizatorsAggregator::select_function(uint func_id) -> MaybeErrorText
     return err;
 }
 
-auto MinimizatorsAggregator::add_function(util::DiagMatrix a, util::Vector b, double c) -> MaybeErrorText
+auto MinimizatorsAggregator::add_function(util::DiagMatrix a, util::Vector b, double c, double eigenvalue) -> MaybeErrorText
 {
-    m_funcs.emplace_back(std::move(a), std::move(b), c);
+    m_funcs.emplace_back(std::move(a), std::move(b), c, eigenvalue);
     return std::nullopt;
 }
 
